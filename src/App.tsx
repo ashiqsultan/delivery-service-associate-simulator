@@ -28,6 +28,23 @@ const initialValues: {
 function App() {
   const [draggable, setDraggable] = useState(true);
   const [position, setPosition] = useState(initialValues.center);
+
+  // TODO
+  // Need functionality to use the simulator for different driverIds
+  // Try using routes and get driver id
+  
+  useEffect(() => {
+    // TODO
+    // Initiate socket connection
+    // setPosition
+    // update Driver details for popup
+  }, []);
+
+  useEffect(() => {
+    // TODO
+    // Send Updated position via socket
+  }, [position]);
+
   function DraggableMarker() {
     const markerRef = useRef(null);
     const eventHandlers = useMemo(
