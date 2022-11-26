@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import './App.css';
+import io from 'socket.io-client';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
@@ -14,6 +14,8 @@ import {
   Popup,
   useMapEvents,
 } from 'react-leaflet';
+import './App.css';
+import { API_URL } from './constants';
 
 const initialValues: {
   zoom: number;
@@ -25,14 +27,37 @@ const initialValues: {
   scrollWheelZoom: true,
 };
 
+const socket = io(API_URL, {
+  extraHeaders: {
+    // 'my-custom-header': 'foo',
+  },
+});
+
 function App() {
+  const [isConnected, setIsConnected] = useState(socket.connected);
   const [draggable, setDraggable] = useState(true);
   const [position, setPosition] = useState(initialValues.center);
 
   // TODO
   // Need functionality to use the simulator for different driverIds
   // Try using routes and get driver id
-  
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      setIsConnected(true);
+    });
+
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('pong');
+    };
+  }, []);
+
   useEffect(() => {
     // TODO
     // Initiate socket connection
