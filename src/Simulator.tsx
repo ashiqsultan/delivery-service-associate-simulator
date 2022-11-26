@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
+import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import 'leaflet/dist/leaflet.css';
 import {
@@ -15,6 +16,7 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 import { API_URL } from './constants';
+import { getDeliveryAssociate } from './api';
 
 const initialValues: {
   zoom: number;
@@ -34,15 +36,19 @@ const mapContainerStyle = {
 const socket = io(API_URL);
 
 function Simulator() {
+  const params = useParams();
+  const [deliveryAssociate, setDeliveryAssociate] = useState({});
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [draggable, setDraggable] = useState(true);
   const [position, setPosition] = useState(initialValues.center);
 
-  // TODO
-  // Need functionality to use the simulator for different driverIds
-  // Try using routes and get driver id
-
   useEffect(() => {
+    const getDADetailsAsync = async (id: string) => {
+      const response = await getDeliveryAssociate(id);
+      setDeliveryAssociate(response.data);
+    };
+
+    // Establish Socket
     socket.on('connect', () => {
       setIsConnected(true);
     });
@@ -51,6 +57,12 @@ function Simulator() {
       setIsConnected(false);
     });
 
+    // Set Delivery Associate Info
+    const { deliveryassociateid } = params;
+    if (deliveryassociateid) {
+      getDADetailsAsync(deliveryassociateid);
+    }
+
     return () => {
       socket.off('connect');
       socket.off('disconnect');
@@ -58,17 +70,14 @@ function Simulator() {
     };
   }, []);
 
+  // deliveryAssociate side effects
   useEffect(() => {
-    // TODO
-    // Initiate socket connection
-    // setPosition
-    // update Driver details for popup
-  }, []);
-
-  useEffect(() => {
-    // TODO
-    // Send Updated position via socket
-  }, [position]);
+    // Update Marker
+    if (Array.isArray(deliveryAssociate?.currentLocation?.coordinates)) {
+      const coordinates = deliveryAssociate.currentLocation.coordinates;
+      setPosition([coordinates[1], coordinates[0]]);
+    }
+  }, [deliveryAssociate]);
 
   function DraggableMarker() {
     const markerRef = useRef(null);
