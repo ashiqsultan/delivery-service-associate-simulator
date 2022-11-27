@@ -1,28 +1,6 @@
 import axios from 'axios';
-import { Point } from 'geojson';
 import { API_URL } from './constants';
-
-interface AppRes {
-  data: any;
-  isError: boolean;
-  errMsg?: string;
-}
-
-export enum DeliveryAssociateStatus {
-  available = 'available',
-  delivering = 'delivering',
-  off = 'off',
-}
-
-export interface IDeliveryAssociate {
-  email: string;
-  name: string;
-  status: DeliveryAssociateStatus;
-  currentLocation: Point;
-}
-export interface DeliveryAssociateRes extends AppRes {
-  data: IDeliveryAssociate;
-}
+import { DeliveryAssociateRes } from './types';
 
 export const getDeliveryAssociate = async (
   id: string

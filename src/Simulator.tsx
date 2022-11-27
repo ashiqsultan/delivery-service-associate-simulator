@@ -17,6 +17,8 @@ import {
 } from 'react-leaflet';
 import { API_URL } from './constants';
 import { getDeliveryAssociate } from './api';
+import Dashboard from './Dashboard';
+import './simulator.css';
 
 const initialValues: {
   zoom: number;
@@ -108,13 +110,24 @@ function Simulator() {
   }
 
   return (
-    <MapContainer style={mapContainerStyle} {...initialValues}>
-      <TileLayer
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <DraggableMarker />
-    </MapContainer>
+    <div className='container'>
+      <div className='col-1'>
+        <div>
+          <Dashboard deliveryAssociate={deliveryAssociate} />
+        </div>
+      </div>
+      <div className='col-2'>
+        <div>
+          <MapContainer style={mapContainerStyle} {...initialValues}>
+            <TileLayer
+              url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <DraggableMarker />
+          </MapContainer>
+        </div>
+      </div>
+    </div>
   );
 }
 
