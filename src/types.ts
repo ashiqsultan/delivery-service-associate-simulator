@@ -43,3 +43,7 @@ export interface IShipment {
 export interface ShipmentRes extends AppRes {
   data: IShipment;
 }
+export interface IUpdateDALocation {
+  id: string;
+  location: Point;
+}

@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
-import L from 'leaflet';
+import L, { LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
@@ -16,15 +16,16 @@ import {
   Popup,
   useMapEvents,
 } from 'react-leaflet';
-import { API_URL } from './constants';
+import { API_URL, socketEvents } from './constants';
 import { getDeliveryAssociate } from './api';
 import Dashboard from './Dashboard';
 import './simulator.css';
 import ShipmentDashboard from './ShipmentDashboard';
-import { IShipment } from './types';
+import { IShipment, IUpdateDALocation } from './types';
 import iconDeliveryAssociate from './assets/icon_delivery_associate.svg';
 import iconPickup from './assets/icon_pickup.svg';
 import iconDrop from './assets/icon_drop.svg';
+import throttle from 'lodash/throttle';
 
 const initialValues: {
   zoom: number;
@@ -42,6 +43,7 @@ const mapContainerStyle = {
 };
 
 const socket = io(API_URL);
+const THROTTLE_DELAY = 500;
 
 function Simulator() {
   const params = useParams();
@@ -50,6 +52,7 @@ function Simulator() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [draggable, setDraggable] = useState(true);
   const [position, setPosition] = useState(initialValues.center);
+  const { deliveryassociateid } = params;
 
   useEffect(() => {
     const getDADetailsAsync = async (id: string) => {
@@ -67,7 +70,6 @@ function Simulator() {
     });
 
     // Set Delivery Associate Info
-    const { deliveryassociateid } = params;
     if (deliveryassociateid) {
       getDADetailsAsync(deliveryassociateid);
     }
@@ -79,6 +81,16 @@ function Simulator() {
     };
   }, []);
 
+  const gpsUpdate = (position: any) => {
+    if (position instanceof LatLng) {
+      const data: IUpdateDALocation = {
+        id: deliveryassociateid || '',
+        location: { type: 'Point', coordinates: [position.lng, position.lat] },
+      };
+      socket.emit(socketEvents.UPDATE_DA_LOCATION, data);
+    }
+  };
+
   // deliveryAssociate side effects
   useEffect(() => {
     // Update Marker
@@ -87,6 +99,16 @@ function Simulator() {
       setPosition([coordinates[1], coordinates[0]]);
     }
   }, [deliveryAssociate]);
+
+  // position side effects
+  useEffect(() => {
+    gpsUpdate(position);
+  }, [position]);
+
+  const throttledPositionUpdate = throttle(function (position) {
+    console.log('throttled position', position);
+    gpsUpdate(position);
+  }, THROTTLE_DELAY);
 
   function DraggableMarker() {
     const markerIcon = L.icon({
@@ -102,6 +124,12 @@ function Simulator() {
           const marker = markerRef.current;
           if (marker != null) {
             setPosition(marker.getLatLng());
+          }
+        },
+        drag() {
+          const marker = markerRef.current;
+          if (marker != null) {
+            throttledPositionUpdate(marker.getLatLng());
           }
         },
       }),
