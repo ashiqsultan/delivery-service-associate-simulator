@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
@@ -20,6 +21,10 @@ import { getDeliveryAssociate } from './api';
 import Dashboard from './Dashboard';
 import './simulator.css';
 import ShipmentDashboard from './ShipmentDashboard';
+import { IShipment } from './types';
+import iconDeliveryAssociate from './assets/icon_delivery_associate.svg';
+import iconPickup from './assets/icon_pickup.svg';
+import iconDrop from './assets/icon_drop.svg';
 
 const initialValues: {
   zoom: number;
@@ -84,6 +89,12 @@ function Simulator() {
   }, [deliveryAssociate]);
 
   function DraggableMarker() {
+    const markerIcon = L.icon({
+      iconUrl: iconDeliveryAssociate,
+      iconSize: [50, 50], // size of the icon
+      popupAnchor: [-3, -20], // point from which the popup should open relative to the iconAnchor
+      className: 'marker',
+    });
     const markerRef = useRef(null);
     const eventHandlers = useMemo(
       () => ({
@@ -103,13 +114,49 @@ function Simulator() {
         eventHandlers={eventHandlers}
         position={position}
         ref={markerRef}
-      >
-        <Popup minWidth={200}>
-          <span>Driver details</span>
-        </Popup>
-      </Marker>
+        icon={markerIcon}
+      ></Marker>
     );
   }
+
+  const PickUpMarker = () => {
+    const markerIcon = L.icon({
+      iconUrl: iconPickup,
+      iconSize: [70, 50], // size of the icon
+      popupAnchor: [-3, -20], // point from which the popup should open relative to the iconAnchor
+    });
+    try {
+      const shipment = shipmentData as IShipment;
+      const coordinates = shipment?.pickupLocation?.coordinates;
+      return Array.isArray(coordinates) ? (
+        <Marker position={[coordinates[1], coordinates[0]]} icon={markerIcon}>
+          <Popup>Pickup location</Popup>
+        </Marker>
+      ) : null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+  const DropLocationMarker = () => {
+    const markerIcon = L.icon({
+      iconUrl: iconDrop,
+      iconSize: [50, 40], // size of the icon
+      popupAnchor: [-3, -20], // point from which the popup should open relative to the iconAnchor
+    });
+    try {
+      const shipment = shipmentData as IShipment;
+      const coordinates = shipment?.dropLocation?.coordinates;
+      return Array.isArray(coordinates) ? (
+        <Marker position={[coordinates[1], coordinates[0]]} icon={markerIcon}>
+          <Popup>Delivery location</Popup>
+        </Marker>
+      ) : null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
   return (
     <div className='container'>
@@ -136,6 +183,8 @@ function Simulator() {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             <DraggableMarker />
+            {shipmentData._id ? <PickUpMarker /> : null}
+            {shipmentData._id ? <DropLocationMarker /> : null}
           </MapContainer>
         </div>
       </div>
