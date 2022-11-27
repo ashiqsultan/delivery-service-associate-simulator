@@ -10,6 +10,7 @@ import { ShipmentStatus } from './types';
 type Props = {
   socket: any;
   deliveryAssociate: IDeliveryAssociate;
+  setShipmentData: any;
 };
 const Dashboard = (props: Props) => {
   const params = useParams();
@@ -23,15 +24,16 @@ const Dashboard = (props: Props) => {
     });
   }, []);
 
-  const onAccept = () => {
-    updateShipmentStatus(
+  const onAccept = async () => {
+    await updateShipmentStatus(
       newShipmentRequest?._id,
       ShipmentStatus.deliveryAssociateAssigned
     );
-    updateShipmentDeliveryAssociate(
+    const shipmentData = await updateShipmentDeliveryAssociate(
       newShipmentRequest?._id,
       deliveryassociateid || ''
     );
+    props.setShipmentData(shipmentData.data);
     setNewShipmentRequest({});
   };
   const onReject = () => {

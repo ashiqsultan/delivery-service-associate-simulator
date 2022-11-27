@@ -19,6 +19,7 @@ import { API_URL } from './constants';
 import { getDeliveryAssociate } from './api';
 import Dashboard from './Dashboard';
 import './simulator.css';
+import ShipmentDashboard from './ShipmentDashboard';
 
 const initialValues: {
   zoom: number;
@@ -40,6 +41,7 @@ const socket = io(API_URL);
 function Simulator() {
   const params = useParams();
   const [deliveryAssociate, setDeliveryAssociate] = useState({});
+  const [shipmentData, setShipmentData] = useState({});
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [draggable, setDraggable] = useState(true);
   const [position, setPosition] = useState(initialValues.center);
@@ -113,7 +115,17 @@ function Simulator() {
     <div className='container'>
       <div className='col-1'>
         <div>
-          <Dashboard socket={socket} deliveryAssociate={deliveryAssociate} />
+          <Dashboard
+            socket={socket}
+            deliveryAssociate={deliveryAssociate}
+            setShipmentData={setShipmentData}
+          />
+          {shipmentData._id ? (
+            <ShipmentDashboard
+              shipmentData={shipmentData}
+              setShipmentData={setShipmentData}
+            />
+          ) : null}
         </div>
       </div>
       <div className='col-2'>

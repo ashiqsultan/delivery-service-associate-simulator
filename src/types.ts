@@ -33,6 +33,7 @@ export enum ShipmentStatus {
   cancelled = 'cancelled',
 }
 export interface IShipment {
+  _id: string;
   pickupLocation: Point;
   dropLocation: Point;
   userId: string;
