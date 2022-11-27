@@ -30,7 +30,7 @@ const Dashboard = (props: Props) => {
       {newShipmentRequest._id ? (
         <ShipmentRequest
           shipmentData={newShipmentRequest}
-          onReject={() => setNewShipmentRequest({})}
+          setNewShipmentRequest={setNewShipmentRequest}
         />
       ) : null}
     </div>
