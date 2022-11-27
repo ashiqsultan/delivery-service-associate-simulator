@@ -113,7 +113,7 @@ function Simulator() {
     <div className='container'>
       <div className='col-1'>
         <div>
-          <Dashboard deliveryAssociate={deliveryAssociate} />
+          <Dashboard socket={socket} deliveryAssociate={deliveryAssociate} />
         </div>
       </div>
       <div className='col-2'>
