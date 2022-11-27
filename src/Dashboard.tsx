@@ -8,8 +8,12 @@ const Dashboard = (props: Props) => {
   const { name, email, status } = props.deliveryAssociate;
   return (
     <div>
-      <Typography gutterBottom>{name}</Typography>
-      <Typography gutterBottom>{status}</Typography>
+      <Typography gutterBottom variant='h6'>
+        Name: {name}
+      </Typography>
+      <Typography gutterBottom variant='h6'>
+        Status: {status}
+      </Typography>
     </div>
   );
 };
