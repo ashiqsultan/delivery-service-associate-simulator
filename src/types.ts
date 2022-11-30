@@ -13,6 +13,7 @@ export enum DeliveryAssociateStatus {
 }
 
 export interface IDeliveryAssociate {
+  _id: string;
   email: string;
   name: string;
   status: DeliveryAssociateStatus;

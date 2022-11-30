@@ -16,7 +16,7 @@ const Dashboard = (props: Props) => {
   const params = useParams();
   const { deliveryassociateid } = params;
   const [newShipmentRequest, setNewShipmentRequest] = useState({});
-  const { name, email, status } = props.deliveryAssociate;
+  const { _id, name, email, status } = props.deliveryAssociate;
 
   useEffect(() => {
     props.socket.on(socketEvents.SHIPMENT_CREATED, (data: any) => {
@@ -43,10 +43,13 @@ const Dashboard = (props: Props) => {
   return (
     <div>
       <Typography gutterBottom variant='h6'>
-        Name: {name}
+        Id: {_id}
       </Typography>
       <Typography gutterBottom variant='h6'>
-        Status: {status}
+        Email: {email}
+      </Typography>
+      <Typography gutterBottom variant='h6'>
+        Name: {name}
       </Typography>
       {/* New Shipment Notification */}
       {newShipmentRequest._id ? (
