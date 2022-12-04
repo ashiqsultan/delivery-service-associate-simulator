@@ -1,4 +1,8 @@
 import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ShipmentRequest from './ShipmentRequest';
@@ -41,20 +45,44 @@ const Dashboard = (props: Props) => {
   };
 
   return (
-    <div>
-      <Typography gutterBottom variant='h6'>
-        Id: {_id}
-      </Typography>
-      <Typography gutterBottom variant='h6'>
-        Email: {email}
-      </Typography>
-      <Typography gutterBottom variant='h6'>
-        Name: {name}
-      </Typography>
-      {/* New Shipment Notification */}
-      {newShipmentRequest._id ? (
-        <ShipmentRequest onAccept={onAccept} onReject={onReject} />
-      ) : null}
+    <div
+      style={{
+        padding: '25px 40px',
+      }}
+    >
+      <Card>
+        <CardContent>
+          <Typography gutterBottom variant='h5' component='div'>
+            Associate Details
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+            }}
+          >
+            <Stack spacing={0.5}>
+              <Typography variant='body2'>
+                <strong>Id: </strong>
+                {_id}
+              </Typography>
+              <Typography variant='body2'>
+                <strong>Email: </strong>
+                {email}
+              </Typography>
+              <Typography variant='body2'>
+                <strong>Name: </strong>
+                {name}
+              </Typography>
+            </Stack>
+          </Box>
+        </CardContent>
+      </Card>
+      <div style={{ margin: '20px 0px' }}>
+        {/* New Shipment Notification */}
+        {newShipmentRequest._id ? (
+          <ShipmentRequest onAccept={onAccept} onReject={onReject} />
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,10 @@
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import { IShipment, ShipmentStatus } from './types';
 import { updateShipmentStatus } from './api';
 
@@ -74,28 +79,55 @@ const ShipmentDashboard = (props: Props) => {
   return (
     <>
       {shipmentData._id ? (
-        <>
-          <Typography variant='h6'>Shipment details</Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Id</strong>: {shipmentData?._id}
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Current Status</strong>:{' '}
-            {statusDisplayName[shipmentData.status]}
-          </Typography>
-          <Typography variant='h6' gutterBottom>
-            Update Shipment Status
-          </Typography>
-          <Button
-            variant='contained'
-            size='large'
-            onClick={async () => {
-              await onShipmentStatusUpdate(updateAction().statusToUpdate);
+        <div>
+          <div
+            style={{
+              padding: '20px 40px',
             }}
           >
-            {updateAction().actionName}
-          </Button>
-        </>
+            <Card>
+              <CardContent>
+                <Typography gutterBottom variant='h5' component='div'>
+                  Shipment details
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                  }}
+                >
+                  <Stack spacing={0.5}>
+                    <Typography variant='body1'>
+                      <strong>Id</strong>: {shipmentData?._id}
+                    </Typography>
+                    <Typography variant='body1'>
+                      <strong>
+                        Status: {statusDisplayName[shipmentData.status]}
+                      </strong>
+                    </Typography>
+                  </Stack>
+                  <Divider />
+                </Box>
+              </CardContent>
+            </Card>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              paddingTop: '10px',
+            }}
+          >
+            <Button
+              variant='contained'
+              size='large'
+              onClick={async () => {
+                await onShipmentStatusUpdate(updateAction().statusToUpdate);
+              }}
+            >
+              {updateAction().actionName}
+            </Button>
+          </div>
+        </div>
       ) : null}
     </>
   );

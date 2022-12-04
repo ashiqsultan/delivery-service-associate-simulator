@@ -14,12 +14,12 @@ type Props = {
 };
 const ShipmentRequest = (props: Props) => {
   return (
-    <div style={{ padding: '0 100px 0' }}>
+    <div>
       <Card>
         <CardContent>
-          <div style={style}>
-            <Typography variant='h5'>New Shipment Available</Typography>
-          </div>
+          <Typography gutterBottom variant='body1' component='div'>
+            <strong>New Shipment Available</strong>
+          </Typography>
           <div style={{ ...style, marginTop: '20px' }}>
             <Button
               variant='contained'

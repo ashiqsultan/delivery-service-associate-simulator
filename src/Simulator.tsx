@@ -43,7 +43,7 @@ const mapContainerStyle = {
 };
 
 const socket = io(API_URL);
-const THROTTLE_DELAY = 500;
+const THROTTLE_DELAY = 50;
 
 function Simulator() {
   const params = useParams();
@@ -113,7 +113,7 @@ function Simulator() {
   function DraggableMarker() {
     const markerIcon = L.icon({
       iconUrl: iconDeliveryAssociate,
-      iconSize: [50, 50], // size of the icon
+      iconSize: [35, 35], // size of the icon
       popupAnchor: [-3, -20], // point from which the popup should open relative to the iconAnchor
       className: 'marker',
     });
