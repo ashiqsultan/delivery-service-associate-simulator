@@ -21,7 +21,7 @@ import { getDeliveryAssociate } from './api';
 import Dashboard from './Dashboard';
 import './simulator.css';
 import ShipmentDashboard from './ShipmentDashboard';
-import { IShipment, IUpdateDALocation } from './types';
+import { IShipment, IUpdateDALocation, ShipmentStatus } from './types';
 import iconDeliveryAssociate from './assets/icon_delivery_associate.svg';
 import iconPickup from './assets/icon_pickup.svg';
 import iconDrop from './assets/icon_drop.svg';
@@ -211,8 +211,14 @@ function Simulator() {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             <DraggableMarker />
-            {shipmentData._id ? <PickUpMarker /> : null}
-            {shipmentData._id ? <DropLocationMarker /> : null}
+            {shipmentData._id &&
+            shipmentData.status !== ShipmentStatus.delivered ? (
+              <PickUpMarker />
+            ) : null}
+            {shipmentData._id &&
+            shipmentData.status !== ShipmentStatus.delivered ? (
+              <DropLocationMarker />
+            ) : null}
           </MapContainer>
         </div>
       </div>
