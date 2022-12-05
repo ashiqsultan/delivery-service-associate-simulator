@@ -16,7 +16,7 @@ function Home() {
     }
   };
 
-  const keyPress = (e) => {
+  const keyPress = (e:any) => {
     if (e.keyCode == 13) {
       navigateToSimulator();
     }
@@ -41,6 +41,7 @@ function Home() {
                     style={{ flexGrow: '1' }}
                     value={deliveryAssociateId}
                     onChange={(event) =>
+                      // @ts-ignore
                       setDeliveryAssociateId(event.target.value)
                     }
                     onKeyDown={keyPress}

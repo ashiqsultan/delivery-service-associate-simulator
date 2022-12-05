@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ShipmentRequest from './ShipmentRequest';
-import { IDeliveryAssociate } from './types';
+import { IDeliveryAssociate, IShipment } from './types';
 import { socketEvents } from './constants';
 import { updateShipmentStatus, updateShipmentDeliveryAssociate } from './api';
 import { ShipmentStatus } from './types';
@@ -19,7 +19,8 @@ type Props = {
 const Dashboard = (props: Props) => {
   const params = useParams();
   const { deliveryassociateid } = params;
-  const [newShipmentRequest, setNewShipmentRequest] = useState({});
+  // @ts-ignore
+  const [newShipmentRequest, setNewShipmentRequest] = useState<IShipment>({});
   const { _id, name, email, status } = props.deliveryAssociate;
 
   useEffect(() => {
@@ -38,9 +39,11 @@ const Dashboard = (props: Props) => {
       deliveryassociateid || ''
     );
     props.setShipmentData(shipmentData.data);
+    // @ts-ignore
     setNewShipmentRequest({});
   };
   const onReject = () => {
+    // @ts-ignore
     setNewShipmentRequest({});
   };
 

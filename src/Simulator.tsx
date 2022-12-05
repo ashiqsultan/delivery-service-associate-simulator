@@ -21,7 +21,7 @@ import { getDeliveryAssociate } from './api';
 import Dashboard from './Dashboard';
 import './simulator.css';
 import ShipmentDashboard from './ShipmentDashboard';
-import { IShipment, IUpdateDALocation, ShipmentStatus } from './types';
+import { IDeliveryAssociate, IShipment, IUpdateDALocation, ShipmentStatus } from './types';
 import iconDeliveryAssociate from './assets/icon_delivery_associate.svg';
 import iconPickup from './assets/icon_pickup.svg';
 import iconDrop from './assets/icon_drop.svg';
@@ -47,8 +47,10 @@ const THROTTLE_DELAY = 50;
 
 function Simulator() {
   const params = useParams();
-  const [deliveryAssociate, setDeliveryAssociate] = useState({});
-  const [shipmentData, setShipmentData] = useState({});
+  // @ts-ignore
+  const [deliveryAssociate, setDeliveryAssociate] = useState<IDeliveryAssociate>({});
+  // @ts-ignore
+  const [shipmentData, setShipmentData] = useState<IShipment>({});
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [draggable, setDraggable] = useState(true);
   const [position, setPosition] = useState(initialValues.center);
@@ -123,12 +125,14 @@ function Simulator() {
         dragend() {
           const marker = markerRef.current;
           if (marker != null) {
+            // @ts-ignore
             setPosition(marker.getLatLng());
           }
         },
         drag() {
           const marker = markerRef.current;
           if (marker != null) {
+            // @ts-ignore
             throttledPositionUpdate(marker.getLatLng());
           }
         },
